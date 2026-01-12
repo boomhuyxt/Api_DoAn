@@ -3,8 +3,6 @@ name: CI/CD Web API to Docker Hub
 on:
   push:
     branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
 
 jobs:
   build-and-push:
@@ -13,14 +11,10 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 8.0.x
-
     - name: Login to Docker Hub
       uses: docker/login-action@v3
       with:
+        # Đảm bảo tên biến trong ngoặc này khớp hoàn toàn với tên bạn đặt ở GitHub Settings
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
@@ -30,6 +24,4 @@ jobs:
         context: .
         file: ./Dockerfile
         push: true
-        tags: |
-          boomhuyxt/api-doan:latest
-          boomhuyxt/api-doan:${{ github.sha }}
+        tags: boomhuyxt/api-doan:latest
