@@ -1,31 +1,25 @@
-name: .NET Core Web API CI
+name: Build and Deploy Web API
 
 on:
   push:
     branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
 
 jobs:
-  build:
-    runs-on: windows-latest
-
+  build-and-push:
+    runs-on: ubuntu-latest # Docker build chạy nhanh hơn trên Linux
     steps:
-    - name: Checkout code
+    - name: Checkout
       uses: actions/checkout@v4
+
+    - name: Login to Docker Hub
+      uses: docker/login-action@v3
       with:
-        fetch-depth: 0
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v5
       with:
-        dotnet-version: 8.0.x # Thay bằng version bạn đang dùng (6.0, 7.0, 8.0)
-
-    - name: Restore dependencies
-      run: dotnet restore Api_DoAn.slnx
-
-    - name: Build
-      run: dotnet build Api_DoAn.slnx --configuration Release --no-restore
-
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
+        context: .
+        push: true
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/api-doan:latest
