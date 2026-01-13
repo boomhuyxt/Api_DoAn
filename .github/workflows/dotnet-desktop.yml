@@ -11,7 +11,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Login to Docker Hub
+    - name: boomhuyxt
       uses: docker/login-action@v3
       with:
         # Đảm bảo tên biến trong ngoặc này khớp hoàn toàn với tên bạn đặt ở GitHub Settings
